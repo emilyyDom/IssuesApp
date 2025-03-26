@@ -84,6 +84,8 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         <!-- "+" Button to Add Issue -->
         <div class="d-flex justify-content-between align-items-center mt-3">
             <h3>All Issues</h3>
+            <a href="persons_list.php" class="btn btn-primary">People</a>
+            <a href="comments_list.php" class="btn btn-secondary">Comments</a> 
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addIssueModal">+</button>
         </div>
 
@@ -102,9 +104,11 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                             <input type="date" name="open_date" class="form-control mb-2" required>
                             <input type="date" name="close_date" class="form-control mb-2">
                             <select name="priority" class="form-control mb-2">
-                                <option value="Low">Low</option>
-                                <option value="Medium">Medium</option>
-                                <option value="High">High</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="F">F</option>
                             </select>
                             <input type="text" name="org" class="form-control mb-2" placeholder="Organization">
                             <input type="text" name="project" class="form-control mb-2" placeholder="Project">
