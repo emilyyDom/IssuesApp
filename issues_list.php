@@ -12,6 +12,46 @@ $persons = $persons_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Handle issue operations (Add, Update, Delete)
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    if(isset($_FILES['pdf_attachment'])){
+        //variable names for details needed to pdf array
+        $fileTmpPath = $_FILES['pdf_attachment']['tmp_name'];
+        $fileName    = $_FILES['pdf_attachment']['name'];
+        $fileSize    = $_FILES['pdf_attachment']['size'];
+        $fileType    = $_FILES['pdf_attachment']['type'];
+        //find extendtion aka type type making sure its .pdf
+        $fileNameCmps = explode(".", $fileName);
+        //converting extention to tolower
+        $fileExtension = strtolower ( end ($fileNameCmps) ) ;
+
+        //checking file type and within size limit
+        if($fileExtension !== 'pdf'){
+            die("Only PDF files are allowed");
+        }
+
+        if($fileSize > 2 * 1024 * 1024){
+            die("File size exceeds 2MB limit");
+        }
+        //the real file name was the file name that came to us-- this includes the time for a specfic identifyer
+        $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
+        //where the pdf files are stored
+        $uploadFileDir = './uploads/';
+        $dest_path = $uploadFileDir . $newFileName;
+        
+        //if no subdirectory/ uploads directory found make it
+        if(!is_dir($uploadFileDir)){
+            //make sub directory, allows for all people to read and use it
+            mkdir($uploadFileDir, 0755, true);
+        }
+
+        if(move_uploaded_file($fileTmpPath, $dest_path)){
+            $attachmentPath = $dest_path;
+        } else{
+            die("error moving file");
+        }
+    } //end pdf attachment
+
+
     // Add Issue
     if (isset($_POST['add_issue'])) {
         $short_description = trim($_POST['short_description']);
@@ -22,11 +62,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $org = trim($_POST['org']);
         $project = trim($_POST['project']);
         $per_id = $_POST['per_id'];
+        //$newFileName is PDF attachment
+        //$attachmentPath is the entire path
+        //$newFileName = $POST['pdf_attachment'];
 
-        $sql = "INSERT INTO iss_issues (short_description, long_description, open_date, close_date, priority, org, project, per_id) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO iss_issues (short_description, long_description, open_date, close_date, priority, org, project, per_id, pdf_attachment) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([$short_description, $long_description, $open_date, $close_date, $priority, $org, $project, $per_id]);
+        $stmt->execute([$short_description, $long_description, $open_date, $close_date, $priority, $org, $project, $per_id, $newFileName]);
 
         header("Location: issues_list.php");
         exit();
@@ -98,7 +141,7 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <form method="POST">
+                        <form method="POST" enctype="multipart/form-data">
                             <input type="text" name="short_description" class="form-control mb-2" placeholder="Short Description" required>
                             <textarea name="long_description" class="form-control mb-2" placeholder="Long Description"></textarea>
                             <input type="date" name="open_date" class="form-control mb-2" required>
@@ -118,6 +161,9 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                                     <option value="<?= $person['id']; ?>"><?= htmlspecialchars($person['fname'] . " " . $person['lname']); ?></option>
                                 <?php endforeach; ?>
                             </select>
+                                </label for="pdf_attachment">PDF</label>
+                                <input type="file" name="pdf_attachment" class="form-control mb-2" accept="application/pdf"/>
+
                             <button type="submit" name="add_issue" class="btn btn-primary">Add Issue</button>
                         </form>
                     </div>
