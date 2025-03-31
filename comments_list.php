@@ -19,18 +19,19 @@ $issues = $issues_stmt->fetchAll(PDO::FETCH_ASSOC);
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Handle adding a new comment
     if (isset($_POST['add_comment'])) {
-        $id = $_POST['id'];
+        // No need for 'id' here since it's auto-incremented in the database
         $per_id = $_POST['per_id'];
         $iss_id = $_POST['iss_id'];
         $short_comment = trim($_POST['short_comment']);
         $long_comment = trim($_POST['long_comment']);
         $posted_date = $_POST['posted_date'];
-
-        $sql = "INSERT INTO iss_comments (id, per_id, iss_id, short_comment, long_comment, posted_date,) 
-                VALUES (?, ?, ?, ?, ?, ?)";
+    
+        // Corrected SQL query (removed the trailing comma)
+        $sql = "INSERT INTO iss_comments (per_id, iss_id, short_comment, long_comment, posted_date) 
+                VALUES (?, ?, ?, ?, ?)";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([$id, $per_id, $iss_id, $short_comment, $long_comment, $posted_date]);
-
+        $stmt->execute([$per_id, $iss_id, $short_comment, $long_comment, $posted_date]);
+    
         header("Location: comments_list.php");
         exit();
     }
