@@ -215,6 +215,39 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                                     <p><strong>Organization:</strong> <?= htmlspecialchars($issue['org']); ?></p>
                                     <p><strong>Project:</strong> <?= htmlspecialchars($issue['project']); ?></p>
                                     <p><strong>Person ID:</strong> <?= htmlspecialchars($issue['per_id']); ?></p>
+
+                                   
+                                    <?php
+                                    $com_iss_id = $issue['id'];
+                                    // Fetch comments for this particular issue
+                                    $comments_sql = "SELECT * FROM iss_comments, iss_persons 
+                                            WHERE iss_id = $com_iss_id
+                                            AND `iss_persons`.id = per_id
+                                            ORDER BY posted_date DESC";
+                                        $comments_stmt = $pdo->query($comments_sql);
+                                        $comments = $comments_stmt->fetchAll(PDO::FETCH_ASSOC);
+                                    ?>
+                                    
+                                    <?php foreach ($comments as $comment) : ?>
+                                        <div style="font-family: monospace;">
+                                            <span style="display:inline-block; width: 180px;">
+                                                <?= htmlspecialchars($comment['lname'] . ", " . $comment['fname']) ?>
+                                            </span>
+                                            <span style="display:inline-block; width: 300px;">
+                                                <?= htmlspecialchars($comment['short_comment']) ?>
+                                            </span>
+                                            <span style="display:inline-block; width: 140px;">
+                                                <?= htmlspecialchars($comment['posted_date']) ?>
+                                            </span>
+                                            <span style="display:inline-block; width: 150px;">
+                                                <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#readIssue<?= $comment['id']; ?>">R</button>
+                                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#updateIssue<?= $comment['id']; ?>">U</button>
+                                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteIssue<?= $comment['id']; ?>">D</button>
+                                            </span>
+                                        </div>
+                                    <?php endforeach; ?>
+                                   
+
                                 </div>
                             </div>
                         </div>
