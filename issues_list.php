@@ -1,5 +1,9 @@
 <?php
 session_start();
+if (!isset($_SESSION['user_id'])){
+    session_destroy();
+    header("Location: login.php");
+}
 require 'database.php'; // Database connection
 
 $pdo = Database::connect();
@@ -77,6 +81,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Update Issue
     if (isset($_POST['update_issue'])) {
+        if( !($_SESSION['admin'] == "Y" || $_SESSION['user_id'] == $_POST['per_id']) ) {
+            header("Location: issues_list.php");
+            exit();
+        }   
         $id = $_POST['id'];
         $short_description = trim($_POST['short_description']);
         $long_description = trim($_POST['long_description']);
@@ -97,6 +105,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Delete Issue
     if (isset($_POST['delete_issue'])) {
+        if( !($_SESSION['admin'] == "Y" || $_SESSION['user_id'] == $_POST['per_id']) ){
+            header("Location: issues_list.php");
+             exit();
+        }
         $id = $_POST['id'];
         $sql = "DELETE FROM iss_issues WHERE id=?";
         $stmt = $pdo->prepare($sql);
@@ -106,6 +118,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 }
+
+
 
 // Fetch all issues
 $sql = "SELECT * FROM iss_issues ORDER BY open_date DESC";
@@ -124,11 +138,16 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     <div class="container mt-3">
         <h2 class="text-center">Issues List</h2>
 
+        
+
+
         <!-- "+" Button to Add Issue -->
         <div class="d-flex justify-content-between align-items-center mt-3">
             <h3>All Issues</h3>
             <a href="persons_list.php" class="btn btn-primary">People</a>
             <a href="comments_list.php" class="btn btn-secondary">Comments</a> 
+            <!-- "logout" Button -->
+            <a href= "logout.php" class="btn btn-warning"> Logout</a>
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addIssueModal">+</button>
         </div>
 
@@ -192,8 +211,11 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                         <td><?= htmlspecialchars($issue['priority']); ?></td>
                         <td>
                             <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#readIssue<?= $issue['id']; ?>">R</button>
+                            <?php if($_SESSION['user_id'] == $issue['per_id'] || $_SESSION['admin'] == "Y" ) {?>
                             <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#updateIssue<?= $issue['id']; ?>">U</button>
                             <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteIssue<?= $issue['id']; ?>">D</button>
+                            <?php } ?>
+
                         </td>
                     </tr>
 
@@ -216,7 +238,8 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                                     <p><strong>Project:</strong> <?= htmlspecialchars($issue['project']); ?></p>
                                     <p><strong>Person ID:</strong> <?= htmlspecialchars($issue['per_id']); ?></p>
 
-                                   
+                                    <!-- Comments Section -->
+                                     <h5>Comments</h5>
                                     <?php
                                     $com_iss_id = $issue['id'];
                                     // Fetch comments for this particular issue
@@ -229,7 +252,7 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                                     ?>
                                     
                                     <?php foreach ($comments as $comment) : ?>
-                                        <div style="font-family: monospace;">
+                                        <div style="font-family: monospace; margin-bottom: 10px">
                                             <span style="display:inline-block; width: 180px;">
                                                 <?= htmlspecialchars($comment['lname'] . ", " . $comment['fname']) ?>
                                             </span>
@@ -240,11 +263,15 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                                                 <?= htmlspecialchars($comment['posted_date']) ?>
                                             </span>
                                             <span style="display:inline-block; width: 150px;">
-                                                <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#readIssue<?= $comment['id']; ?>">R</button>
-                                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#updateIssue<?= $comment['id']; ?>">U</button>
-                                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteIssue<?= $comment['id']; ?>">D</button>
+                                                <a href="comments_list.php?action=read&comment_id=<?= $comment['id']; ?>" class="btn btn-info btn-sm">R</a>
+                                                <a href="comments_list.php?action=update&comment_id=<?= $comment['id']; ?>" class="btn btn-warning btn-sm">U</a>
+                                                <a href="comments_list.php?action=delete&comment_id=<?= $comment['id']; ?>" class="btn btn-danger btn-sm">D</a>
                                             </span>
+
                                         </div>
+
+
+                                        
                                     <?php endforeach; ?>
                                    
 

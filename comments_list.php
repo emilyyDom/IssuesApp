@@ -1,5 +1,9 @@
 <?php
 session_start();
+if (!isset($_SESSION['user_id'])){
+    session_destroy();
+    header("Location: login.php");
+}
 require 'database.php'; // Database connection
 
 $pdo = Database::connect();

@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if (!empty($email) && !empty($password)) {
         // Prepare SQL statement to fetch user details
-        $stmt = $pdo->prepare("SELECT id, fname, lname, pwd_hash, pwd_salt FROM iss_persons WHERE email = ?");
+        $stmt = $pdo->prepare("SELECT * FROM iss_persons WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         
@@ -23,6 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Authentication successful, start session
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user_name'] = $user['fname'] . ' ' . $user['lname'];
+                $_SESSION['email'] = $user['email'];
+                $_SESSION['admin'] = $user['admin'];
                 header("Location: issues_list.php");
                 exit();
             } else {
@@ -45,16 +47,17 @@ Database::disconnect(); // Close the connection
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - DSR</title>
+
 </head>
 <body>
     <h2>Login to Department Status Report</h2>
     <?php if (isset($error)) { echo "<p style='color:red;'>$error</p>"; } ?>
     <form method="POST" action="login.php">
-        <label for="email">Email:</label>
-        <input type="email" name="email" required><br>
+        <label for="email">Email Address:</label>
+        <input type="email" name="email" class="form-control" placeholder="Enter email" required><br>
         <label for="password">Password:</label>
-        <input type="password" name="password" required><br>
-        <button type="submit">Login</button>
+        <input type="password" class="form-control" name="password" placeholder="Password" required><br>
+        <button type="submit" class="btn btn-primary">Login</button>
     </form>
 </body>
 </html>
