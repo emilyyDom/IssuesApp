@@ -256,6 +256,7 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
                                     <!-- Comments Section -->
                                      <h5>Comments</h5>
+                                     <a href="comments_list.php?action=create&issue_id=<?= $issue['id']; ?>" class="btn btn-success btn-sm">+</a>
                                     <?php
                                     $com_iss_id = $issue['id'];
                                     // Fetch comments for this particular issue
@@ -280,9 +281,9 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                                             </span>
                                             <span style="display:inline-block; width: 150px;">
                                                
-                                                <a href="comments_list.php?action=read&comment_id=<?= $comment['id']; ?>" class="btn btn-info btn-sm">R</a>
-                                                <a href="comments_list.php?action=update&comment_id=<?= $comment['id']; ?>" class="btn btn-warning btn-sm">U</a>
-                                                <a href="comments_list.php?action=delete&comment_id=<?= $comment['id']; ?>" class="btn btn-danger btn-sm">D</a>
+                                                <a href="comments_list.php?action=read&issue_id=<?= $issue['id']; ?>" class="btn btn-info btn-sm">R</a>
+                                                <a href="comments_list.php?action=update&issue_id=<?= $issue['id']; ?>" class="btn btn-warning btn-sm">U</a>
+                                                <a href="comments_list.php?action=delete&issue_id=<?= $issue['id']; ?>" class="btn btn-danger btn-sm">D</a>
                                             </span>
 
                                         </div>

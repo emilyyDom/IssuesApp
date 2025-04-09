@@ -68,11 +68,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-
+$iss_id = $_GET['issue_id'];
 
 
 // Fetch all comments
-$sql = "SELECT * FROM iss_comments ORDER BY posted_date DESC";
+$sql = "SELECT * FROM iss_comments WHERE iss_id = $iss_id ORDER BY posted_date DESC";
 $comments = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
