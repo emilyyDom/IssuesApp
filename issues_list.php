@@ -118,12 +118,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 }
+/*Just added to check for toggle*/
+// Check if the user wants to view all issues or just open ones
+$view_all_issues = isset($_POST['view_all']) ? $_POST['view_all'] : 'no';
+
+// Modify SQL query based on the toggle
+if ($view_all_issues == 'yes') {
+    $sql = "SELECT * FROM iss_issues ORDER BY open_date DESC";
+} else {
+    $sql = "SELECT * FROM iss_issues WHERE close_date IS NULL ORDER BY open_date DESC"; // Only open issues
+}
+
+$issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
 
 
 // Fetch all issues
-$sql = "SELECT * FROM iss_issues ORDER BY open_date DESC";
-$issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+//$sql = "SELECT * FROM iss_issues ORDER BY open_date DESC";
+//$issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -138,7 +150,11 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     <div class="container mt-3">
         <h2 class="text-center">Issues List</h2>
 
-        
+        <form method="POST" action="issues_list.php">
+            <button type="submit" name="view_all" value="<?php echo ($view_all_issues == 'yes') ? 'no' : 'yes'; ?>" class="btn btn-secondary">
+                <?php echo ($view_all_issues == 'yes') ? 'Show Open Issues Only' : 'Show All Issues'; ?>
+            </button>
+        </form>
 
 
         <!-- "+" Button to Add Issue -->
