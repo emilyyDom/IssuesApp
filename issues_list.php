@@ -150,21 +150,24 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     <div class="container mt-3">
         <h2 class="text-center">Issues List</h2>
 
+        <!-- "Show (all) issues" Button -->
         <form method="POST" action="issues_list.php">
             <button type="submit" name="view_all" value="<?php echo ($view_all_issues == 'yes') ? 'no' : 'yes'; ?>" class="btn btn-secondary">
                 <?php echo ($view_all_issues == 'yes') ? 'Show Open Issues Only' : 'Show All Issues'; ?>
             </button>
+
+                <!-- "logout" Button -->
+            <a href= "logout.php" class="btn btn-warning"> Logout</a>
+            
         </form>
 
-
+       
         <!-- "+" Button to Add Issue -->
         <div class="d-flex justify-content-between align-items-center mt-3">
             <h3>All Issues</h3>
             <a href="persons_list.php" class="btn btn-primary">People</a>
-            <a href="comments_list.php" class="btn btn-secondary">Comments</a> 
-            <!-- "logout" Button -->
-            <a href= "logout.php" class="btn btn-warning"> Logout</a>
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addIssueModal">+</button>
+            <a href="comments_list.php" class="btn btn-secondary">Comments</a>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addIssueModal">+</button> 
         </div>
 
         <!-- Add Issue Modal -->

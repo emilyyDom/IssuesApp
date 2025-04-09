@@ -68,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
+//grabbing issue id to give a filter when comments are selected
 $iss_id = $_GET['issue_id'];
 
 
