@@ -131,7 +131,7 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Issues List - DSR</title>
+    <title>Issues List</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -263,6 +263,7 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                                                 <?= htmlspecialchars($comment['posted_date']) ?>
                                             </span>
                                             <span style="display:inline-block; width: 150px;">
+                                               
                                                 <a href="comments_list.php?action=read&comment_id=<?= $comment['id']; ?>" class="btn btn-info btn-sm">R</a>
                                                 <a href="comments_list.php?action=update&comment_id=<?= $comment['id']; ?>" class="btn btn-warning btn-sm">U</a>
                                                 <a href="comments_list.php?action=delete&comment_id=<?= $comment['id']; ?>" class="btn btn-danger btn-sm">D</a>
@@ -347,6 +348,7 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
 

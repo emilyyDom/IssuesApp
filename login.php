@@ -7,8 +7,9 @@ $pdo = Database::connect(); // Get PDO connection
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
+    $stored_hash = $user['pwd_salt'];
     //remove this for no hashed password
-    $hashed_password = $password;
+    //$hashed_password = $password;
     
     if (!empty($email) && !empty($password)) {
         // Prepare SQL statement to fetch user details
@@ -18,7 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if ($user) {
             // Generate hash using the stored salt and compare with stored hash
-           // $hashed_password = md5($password . $user['pwd_salt']);
+            //hello - password.. this work with salting now
+            $hashed_password = md5($password . $stored_hash);
             if ($hashed_password === $user['pwd_hash']) {
                 // Authentication successful, start session
                 $_SESSION['user_id'] = $user['id'];
@@ -46,18 +48,27 @@ Database::disconnect(); // Close the connection
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - DSR</title>
-
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h2>Login to Department Status Report</h2>
-    <?php if (isset($error)) { echo "<p style='color:red;'>$error</p>"; } ?>
-    <form method="POST" action="login.php">
-        <label for="email">Email Address:</label>
-        <input type="email" name="email" class="form-control" placeholder="Enter email" required><br>
-        <label for="password">Password:</label>
-        <input type="password" class="form-control" name="password" placeholder="Password" required><br>
-        <button type="submit" class="btn btn-primary">Login</button>
-    </form>
+    <div class="container">
+        <h2>Issue Tracking System - Login</h2>
+        <?php if (isset($error)) { echo "<p style='color:red;'>$error</p>"; } ?>
+        <form method="POST" action="login.php" class="px-3 py-4">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email Address:</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
+            </div>
+            <div class="mb-3">
+            <label for="password" class="form-label">Password:</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+
+        <p>Don't have an account? <a href="register.php">Register here</a></p>
+    </div>
 </body>
 </html>
