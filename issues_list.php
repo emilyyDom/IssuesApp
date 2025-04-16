@@ -239,6 +239,7 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
                     <!-- Read Modal -->
                     <div class="modal fade" id="readIssue<?= $issue['id']; ?>" tabindex="-1">
+                        <?php $_SESSION['issue_id'] = $issue['id']; ?>
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">

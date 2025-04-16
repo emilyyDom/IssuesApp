@@ -69,13 +69,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 //grabbing issue id to give a filter when comments are selected
-$iss_id = $_GET['issue_id'];
+$iss_id = $_SESSION['issue_id'];
+//print_r($_GET);
+//print_R($_POST);
+//exit();
 
 
 // Fetch all comments
 $sql = "SELECT * FROM iss_comments WHERE iss_id = $iss_id ORDER BY posted_date DESC";
 $comments = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -115,17 +119,19 @@ $comments = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                                     <option value="<?= $person['id']; ?>"><?= htmlspecialchars($person['fname'] . " " . $person['lname']); ?></option>
                                 <?php endforeach; ?>
                             </select>
+                            
                             <select name="iss_id" class="form-control mb-2">
                                 <option value="">Select Issue</option>
                                 <?php foreach ($issues as $issue) : ?>
                                     <option value="<?= $issue['id']; ?>"><?= htmlspecialchars($issue['short_description']); ?></option>
                                 <?php endforeach; ?>
                             </select>
+                            
                             <input type="text" name="short_comment" class="form-control mb-2" placeholder="Short Comment" required>
                             <textarea name="long_comment" class="form-control mb-2" placeholder="Long Comment"></textarea>
                             <input type="date" name="posted_date" class="form-control mb-2" required>
                             
-                            <button type="submit" name="add_comment" class="btn btn-primary">Add Issue</button>
+                            <button type="submit" name="add_comment" class="btn btn-primary">Add Comment</button>
                         </form>
                     </div>
                 </div>
