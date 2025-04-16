@@ -166,7 +166,6 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         <div class="d-flex justify-content-between align-items-center mt-3">
             <h3> <?php echo ($view_all_issues === 'yes') ? 'All Issues' : 'Open Issues'; ?></h3>
             <a href="persons_list.php" class="btn btn-primary">People</a>
-            <a href="comments_list.php" class="btn btn-info">Comments</a>
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addIssueModal">+</button> 
         </div>
 
