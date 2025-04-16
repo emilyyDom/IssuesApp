@@ -121,8 +121,10 @@ $persons = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                         <td><?= $person['admin'] ? 'Yes' : 'No'; ?></td>
                         <td>
                             <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#readPerson<?= $person['id']; ?>">R</button>
+                            <?php if($_SESSION['user_id'] == $person['id'] || $_SESSION['admin'] == "Y" ) {?>
                             <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#updatePerson<?= $person['id']; ?>">U</button>
                             <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletePerson<?= $person['id']; ?>">D</button>
+                            <?php } ?>
                         </td>
                     </tr>
 
