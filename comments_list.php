@@ -154,8 +154,10 @@ $comments = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                         <td><?= htmlspecialchars($comment['posted_date']); ?></td>
                         <td>
                             <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#readComment<?= $comment['id']; ?>">R</button>
+                            <?php if($_SESSION['user_id'] == $comment['per_id'] || $_SESSION['admin'] == "Y" ) {?>
                             <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#updateComment<?= $comment['id']; ?>">U</button>
                             <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteComment<?= $comment['id']; ?>">D</button>
+                            <?php } ?>
                         </td>
                     </tr>
 

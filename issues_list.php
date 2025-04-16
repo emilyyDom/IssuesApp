@@ -285,8 +285,10 @@ $issues = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                                             <span style="display:inline-block; width: 150px;">
                                                
                                                 <a href="comments_list.php?action=read&issue_id=<?= $issue['id']; ?>" class="btn btn-info btn-sm">R</a>
+                                                <?php if($_SESSION['user_id'] == $issue['per_id'] || $_SESSION['admin'] == "Y" ) {?>
                                                 <a href="comments_list.php?action=update&issue_id=<?= $issue['id']; ?>" class="btn btn-warning btn-sm">U</a>
                                                 <a href="comments_list.php?action=delete&issue_id=<?= $issue['id']; ?>" class="btn btn-danger btn-sm">D</a>
+                                                <?php } ?>
                                             </span>
 
                                         </div>

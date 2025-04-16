@@ -19,7 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if ($user) {
             // Generate hash using the stored salt and compare with stored hash
-            //hello - password.. this work with salting now
             $hashed_password = md5($password . $stored_hash);
             if ($hashed_password === $user['pwd_hash']) {
                 // Authentication successful, start session
